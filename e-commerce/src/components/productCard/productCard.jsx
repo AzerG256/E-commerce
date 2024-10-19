@@ -1,6 +1,6 @@
 import React from 'react'
-import './card.css'
-function Card({Product}) {
+import './productCard.css'
+function ProductCard({Product}) {
   return (
     <div class="product-card">
     <div class="product-image">
@@ -17,4 +17,4 @@ function Card({Product}) {
   )
 }
 
-export default Card;
+export default ProductCard;
