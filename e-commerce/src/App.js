@@ -1,7 +1,8 @@
-
 import NavBar from './components/navBar/navBar';
 import Footer from './components/Footer/Footer';
 import ProductList from './components/productList/productList';
+import Cart from './components/cart/cart';
+//import { useState } from 'react';
 function App() {
   const products = [
     {
@@ -26,12 +27,13 @@ function App() {
         image: "https://via.placeholder.com/250"
     }//testing the page
 ];
+
   return (
     <>
     <NavBar/>
-    <ProductList  products={products}/>
+    <ProductList products={products}/>
+    <Cart/>
     <Footer/>
-
     </>
   )
 }
