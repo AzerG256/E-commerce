@@ -1,0 +1,42 @@
+.error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+    color: #333;
+    text-align: center;
+}
+
+.error-content {
+    max-width: 500px;
+    padding: 20px;
+}
+
+.error-code {
+    font-size: 6rem;
+    font-weight: bold;
+    color: #ff4c4c; /* Use a red color for the error code */
+    margin: 0;
+}
+
+.error-message {
+    font-size: 1.5rem;
+    color: #666;
+    margin: 10px 0 20px;
+}
+
+.back-home-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.back-home-button:hover {
+    background-color: #0056b3;
+}
