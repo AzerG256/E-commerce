@@ -51,7 +51,7 @@ function Login() {
             </form>
 
             <p className="register-link">
-                Don't have an account? <a href="../register/Register">Register here</a>
+                Don't have an account? <a href="../register">Register here</a>
             </p>
 
             <div className="oauth-login">

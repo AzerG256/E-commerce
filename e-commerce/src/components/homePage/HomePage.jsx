@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import ProductCard from '../productCard/productCard';
 import './HomePage.css'; // Optional: Create a CSS file for styling
 
 const HomePage = ({ products }) => {
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc');
   const productsPerPage = 5; // Number of products to display per page
 
@@ -49,7 +50,7 @@ const HomePage = ({ products }) => {
       {/* Product List */}
       <div className="product-list">
         {filteredProducts.map(product => (
-          <ProductCard key={product.id} Product={product} />
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
 
@@ -58,5 +59,16 @@ const HomePage = ({ products }) => {
   );
 };
 
-export default HomePage;
+HomePage.propTypes = {
+  products: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+  })).isRequired,
+};
 
+HomePage.defaultProps = {
+  products: [],
+};
+
+export default HomePage;

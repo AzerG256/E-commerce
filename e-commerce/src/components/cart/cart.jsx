@@ -42,7 +42,7 @@ function Cart() {
             <div className="cart-items">
                 {cartItems.map(item => (
                     <div key={item.id} className="cart-item">
-                        <ProductCard Product={item} />
+                        <ProductCard product={item} />
                         <div className="cart-controls">
                             <label htmlFor="quantity">Quantity:</label>
                             <input
