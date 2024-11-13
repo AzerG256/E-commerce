@@ -1,23 +1,52 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# Node modules
 /node_modules
-/.pnp
-.pnp.js
+/client/node_modules
+/server/node_modules
 
-# testing
-/coverage
-
-# production
+# Production builds
 /build
+/client/build
+/server/build
 
-# misc
+# Miscellaneous system files
 .DS_Store
+Thumbs.db
+
+# Environment variables
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+/client/.env
+/server/.env
 
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/client/npm-debug.log*
+/server/npm-debug.log*
+/client/yarn-debug.log*
+/server/yarn-debug.log*
+
+# Testing coverage
+/coverage
+/client/coverage
+/server/coverage
+
+# IDE/Editor settings and files
+.idea
+.vscode
+*.swp
+
+# PnP
+.pnp
+.pnp.js
+
+# Parcel-bundler cache (if using Parcel)
+.cache
+
+# Temporary files
+*.tmp
+*.temp
