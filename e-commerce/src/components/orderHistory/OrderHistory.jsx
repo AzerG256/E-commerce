@@ -1,26 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './OrderHistory.css';
 
 function OrderHistory() {
-    const orders = [
-        { id: 1, date: '2023-09-10', total: 59.99 },
-        { id: 2, date: '2023-09-15', total: 29.99 },
-        { id: 3, date: '2023-09-20', total: 49.99 },
-    ];
+    const [orders, setOrders] = useState([]);
+
+    useEffect(() => {
+        // Fetch order history from backend
+        const fetchOrderHistory = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/orders', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setOrders(data.orders);
+                } else {
+                    console.error('Failed to fetch order history');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        fetchOrderHistory();
+    }, []);
 
     return (
         <div className="order-history">
             <h3>Order History</h3>
-            <ul>
-                {orders.map(order => (
-                    <li key={order.id}>
-                        <p>Order ID: {order.id}</p>
-                        <p>Date: {order.date}</p>
-                        <p>Total: ${order.total.toFixed(2)}</p>
-                        <button onClick={() => console.log(`Viewing order ${order.id}`)}>View Order</button>
-                    </li>
-                ))}
-            </ul>
+            {orders.length > 0 ? (
+                <ul>
+                    {orders.map((order) => (
+                        <li key={order.id}>
+                            <p>Order ID: {order.id}</p>
+                            <p>Date: {new Date(order.date).toLocaleDateString()}</p>
+                            <p>Total: ${order.total.toFixed(2)}</p>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No orders found.</p>
+            )}
         </div>
     );
 }

@@ -20,6 +20,7 @@ const products = [
   { id: 2, name: 'Product 2', price: 200 },
   // Add more products as needed
 ];
+
 function App() {
   return (
     <Router>

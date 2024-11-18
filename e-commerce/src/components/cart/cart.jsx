@@ -1,70 +1,63 @@
-import React from 'react'
-import { useState } from 'react';
-import ProductCard from '../productCard/productCard';
-import './cart.css'
+import React, { useState, useEffect } from 'react';
+
 function Cart() {
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: "Product 1",
-            description: "This is the first product.",
-            price: 29.99,
-            image: "https://via.placeholder.com/250",
-            quantity: 1
-        },
-        {
-            id: 2,
-            name: "Product 2",
-            description: "This is the second product.",
-            price: 39.99,
-            image: "https://via.placeholder.com/250",
-            quantity: 2
+    const [cartItems, setCartItems] = useState([]);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const fetchCartItems = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/cart', {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    setCartItems(data.items);
+                } else {
+                    setError('Unable to fetch cart items.');
+                }
+            } catch (err) {
+                setError('Something went wrong. Please try again.');
+            }
+        };
+
+        fetchCartItems();
+    }, []);
+
+    const handleRemoveItem = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/cart/${id}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            });
+
+            if (response.ok) {
+                setCartItems(cartItems.filter((item) => item.id !== id));
+            } else {
+                setError('Unable to remove item.');
+            }
+        } catch (err) {
+            setError('Something went wrong. Please try again.');
         }
-    ]);
-
-    const updateQuantity = (id, newQuantity) => {
-        setCartItems(prevItems =>
-            prevItems.map(item =>
-                item.id === id ? { ...item, quantity: newQuantity } : item
-            )
-        );
     };
-
-    const removeItem = (id) => {
-        setCartItems(prevItems => prevItems.filter(item => item.id !== id));
-    };
-
-    const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
     return (
         <div className="cart-container">
-            <h2>Your Cart</h2>
-            <div className="cart-items">
-                {cartItems.map(item => (
-                    <div key={item.id} className="cart-item">
-                        <ProductCard product={item} />
-                        <div className="cart-controls">
-                            <label htmlFor="quantity">Quantity:</label>
-                            <input
-                                type="number"
-                                min="1"
-                                value={item.quantity}
-                                onChange={(e) =>
-                                    updateQuantity(item.id, parseInt(e.target.value))
-                                }
-                            />
-                            <button onClick={() => removeItem(item.id)}>Remove</button>
-                        </div>
-                    </div>
+            <h1>Cart</h1>
+            {error && <p className="error">{error}</p>}
+            <ul>
+                {cartItems.map((item) => (
+                    <li key={item.id}>
+                        {item.name} - ${item.price} x {item.quantity}
+                        <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
+                    </li>
                 ))}
-            </div>
-            {cartItems.length > 0 && (
-                <div className="cart-summary">
-                    <h3>Total: ${totalPrice.toFixed(2)}</h3>
-                    <button className="checkout-btn">Proceed to Checkout</button>
-                </div>
-            )}
+            </ul>
+            <button>Proceed to Checkout</button>
         </div>
     );
 }
+
 export default Cart;

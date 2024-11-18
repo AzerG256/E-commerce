@@ -1,49 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ProfileForm.css';
 
 function ProfileForm() {
-    const [name, setName] = useState('John Doe');
-    const [email, setEmail] = useState('johndoe@example.com');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
 
-    const handleUpdate = (e) => {
+    useEffect(() => {
+        // Fetch user details from backend
+        const fetchUserProfile = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/user', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setName(data.name);
+                    setEmail(data.email);
+                } else {
+                    console.error('Failed to fetch user profile');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
+
+    const handleUpdate = async (e) => {
         e.preventDefault();
-        // Add logic to handle profile update
-        console.log("Updated Info:", { name, email, password });
-        setPassword(''); // Clear password field after submission
+        try {
+            const response = await fetch('http://localhost:5000/api/user', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({ name, email, password }),
+            });
+
+            if (response.ok) {
+                setMessage('Profile updated successfully!');
+            } else {
+                const errorData = await response.json();
+                setMessage(errorData.message || 'Error updating profile.');
+            }
+        } catch (err) {
+            console.error(err);
+            setMessage('Something went wrong.');
+        }
     };
 
     return (
-        <form onSubmit={handleUpdate} className="profile-form">
+        <form className="profile-form" onSubmit={handleUpdate}>
             <h3>Update Profile</h3>
-            <div className="input-group">
-                <label htmlFor="name">Name:</label>
-                <input
-                    type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
+            <div>
+                <label>Name:</label>
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
-            <div className="input-group">
-                <label htmlFor="email">Email:</label>
-                <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
+            <div>
+                <label>Email:</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
-            <div className="input-group">
-                <label htmlFor="password">Password:</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
+            <div>
+                <label>Password:</label>
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
-            <button type="submit" className="update-btn">Update Profile</button>
+            <button type="submit">Update</button>
+            {message && <p>{message}</p>}
         </form>
     );
 }

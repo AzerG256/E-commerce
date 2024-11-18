@@ -1,25 +1,34 @@
 // server.js
 const express = require('express');
 const mongoose = require('mongoose');
-const userRoutes = require('./routes/userRoutes');
-const productRoutes = require('./routes/productRoutes');
-const cartRoutes = require('./routes/cartRoutes');
-const orderRoutes = require('./routes/orderRoutes');
+const userRoutes = require('./routes/UserRoutes');
+const productRoutes = require('./routes/ProductRoutes');
+const cartRoutes = require('./routes/CartRoutes');
+const orderRoutes = require('./routes/OrderRoutes');
 
 const app = express();
+const cors = require('cors');
+
+// Use CORS middleware
+app.use(cors());
+
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/yourDatabaseName', {
+mongoose.connect('mongodb://localhost:27017/ecommerce', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Failed to connect to MongoDB', err));
 
 // Route handling
-app.use('/api/users', userRoutes);
+app.get('/', (req, res) => {
+  res.send('Server is running!');
+});
+
+app.use('/api', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);

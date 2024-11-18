@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
 function Register() {
@@ -7,8 +8,9 @@ function Register() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-    
-    const handleRegister = (e) => {
+    const [successMessage, setSuccessMessage] = useState('');
+    const navigate = useNavigate();
+    const handleRegister = async(e) => {
         e.preventDefault();
 
         // Form validation
@@ -37,7 +39,27 @@ function Register() {
         }
 
         // Submit form logic (e.g., call to an API)
-        console.log("Name:", name, "Email:", email, "Password:", password);
+        try {
+            const response = await fetch('http://localhost:5000/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setSuccessMessage('Registration successful!');
+                setError('');
+                // Redirect to login or dashboard
+                setTimeout(() => navigate('/login'), 2000);
+            } else {
+                setError(data.message || 'Something went wrong.');
+            }
+        } catch (err) {
+            setError('Something went wrong. Please try again.');
+            console.error(err);
+        }
 
         // Clear form after successful registration
         setName('');
@@ -92,6 +114,8 @@ function Register() {
                         required
                     />
                 </div>
+                {error && <p className="error">{error}</p>}
+                {successMessage && <p className="success">{successMessage}</p>}
                 <button type="submit" className="register-btn">Register</button>
             </form>
             <p className="login-link">
