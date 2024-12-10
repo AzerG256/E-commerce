@@ -10,12 +10,11 @@ import Login from './components/login/Login';
 import Register from './components/register/Register';
 import Checkout from './components/checkout/Checkout';
 import UserProfile from './components/userProfile/UserProfile';
-import OrderDetails from './components/orderDetails/OrderDetails'; // Ensure this is the correct import
+import OrderDetails from './components/orderDetails/OrderDetails';
 import AdminDashboard from './components/adminDashbord/AdminDashbord';
 import ProtectedRoute from './components/protectedRoute/ProtectedRoute';
 
 const products = [
-  // Example products array
   { id: 1, name: 'Product 1', price: 100 },
   { id: 2, name: 'Product 2', price: 200 },
   // Add more products as needed
@@ -30,17 +29,21 @@ function App() {
         <Route path="/" element={<HomePage products={products} />} />
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/:productId" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* Protected Routes */}
-        <Route path="/checkout" element={<ProtectedRoute component={Checkout} />} />
-        <Route path="/profile" element={<ProtectedRoute component={UserProfile} />} />
-        <Route path="/order/:orderId" element={<ProtectedRoute component={OrderDetails} />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/order/:orderId" element={<OrderDetails />} />
+        </Route>
 
         {/* Admin Route */}
-        <Route path="/admin" element={<ProtectedRoute component={AdminDashboard} />} />
+        <Route element={<ProtectedRoute role="admin" />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Route>
 
         {/* Catch-all for undefined routes */}
         <Route path="*" element={<ErrorPage />} />

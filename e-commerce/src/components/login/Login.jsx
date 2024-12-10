@@ -1,25 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from '../../utils/api.js';
 import './Login.css';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate(); // Initialize history for redirection
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        const handleLoginSuccess = (userData) => {
-                // Save user data to localStorage (optional)
-                localStorage.setItem('user', JSON.stringify(userData));
-                // Redirect to the dashboard
-                navigate('/');
-                // Optionally clear form and error state
-                setEmail('');
-                setPassword('');
-                setError('');
-        };
 
         if (!email || !password) {
             setError('Please fill in all fields.');
@@ -27,30 +18,28 @@ function Login() {
         }
 
         try {
-            // Replace with your actual backend endpoint
-            const response = await fetch('http://localhost:5000/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
+            const response = await API.post('/auth/login', { email, password });
 
-            const data = await response.json();
+            // Save the JWT token to localStorage
+            localStorage.setItem('token', response.data.token);
 
-            if (response.ok) {
-                handleLoginSuccess(data); // Call the login success handler
-            } else {
-                setError(data.message || 'Invalid credentials');
-            }
+            // Redirect to a protected route
+            navigate('/');
         } catch (err) {
-            setError('Something went wrong. Please try again.');
+            // Handle error
+            if (err.response) {
+                setError(err.response.data.message || 'Invalid credentials. Please try again.');
+            } else {
+                setError('Something went wrong. Please try again.');
+            }
             console.error(err);
         }
 
-
-        // Clear form fields
+        // Clear form fields (optional)
         setEmail('');
         setPassword('');
     };
+
     return (
         <div className="login-container">
             <h2>Login</h2>
@@ -76,7 +65,7 @@ function Login() {
                         required
                     />
                 </div>
-                <button onClick={handleLogin} className="login-btn">Login</button>
+                <button type="submit" className="login-btn">Login</button>
             </form>
 
             <p className="register-link">

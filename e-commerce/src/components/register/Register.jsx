@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from '../../utils/api.js'; // Assuming you have an axios instance configured
 import './Register.css';
 
 function Register() {
@@ -10,7 +11,8 @@ function Register() {
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
-    const handleRegister = async(e) => {
+
+    const handleRegister = async (e) => {
         e.preventDefault();
 
         // Form validation
@@ -38,41 +40,39 @@ function Register() {
             return;
         }
 
-        // Submit form logic (e.g., call to an API)
         try {
-            const response = await fetch('http://localhost:5000/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password }),
-            });
+            const response = await API.post('/auth/register', { name, email, password });
 
-            const data = await response.json();
+            // Save the JWT token to localStorage
+            localStorage.setItem('token', response.data.token);
 
-            if (response.ok) {
-                setSuccessMessage('Registration successful!');
-                setError('');
-                // Redirect to login or dashboard
-                setTimeout(() => navigate('/login'), 2000);
-            } else {
-                setError(data.message || 'Something went wrong.');
-            }
+            // Display success message
+            setSuccessMessage('Registration successful!');
+            setError('');
+
+            // Redirect to login or dashboard after a short delay
+            setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
-            setError('Something went wrong. Please try again.');
+            if (err.response) {
+                setError(err.response.data.message || 'Something went wrong.');
+            } else {
+                setError('Something went wrong. Please try again.');
+            }
             console.error(err);
         }
 
-        // Clear form after successful registration
+        // Clear form after submission
         setName('');
         setEmail('');
         setPassword('');
         setConfirmPassword('');
-        setError('');
     };
 
     return (
         <div className="register-container">
             <h2>Register</h2>
             {error && <p className="error-message">{error}</p>}
+            {successMessage && <p className="success-message">{successMessage}</p>}
             <form onSubmit={handleRegister} className="register-form">
                 <div className="input-group">
                     <label htmlFor="name">Name:</label>
@@ -114,8 +114,6 @@ function Register() {
                         required
                     />
                 </div>
-                {error && <p className="error">{error}</p>}
-                {successMessage && <p className="success">{successMessage}</p>}
                 <button type="submit" className="register-btn">Register</button>
             </form>
             <p className="login-link">

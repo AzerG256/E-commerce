@@ -1,10 +1,13 @@
 // server.js
 const express = require('express');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 const userRoutes = require('./routes/UserRoutes');
 const productRoutes = require('./routes/ProductRoutes');
 const cartRoutes = require('./routes/CartRoutes');
 const orderRoutes = require('./routes/OrderRoutes');
+const authRoutes = require('./routes/authRoutes');
+dotenv.config();
 
 const app = express();
 const cors = require('cors');
@@ -28,6 +31,9 @@ app.get('/', (req, res) => {
   res.send('Server is running!');
 });
 
+// Add auth routes
+app.use('/api/auth', authRoutes);
+// Use routes
 app.use('/api', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
