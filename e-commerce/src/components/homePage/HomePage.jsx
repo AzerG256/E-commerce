@@ -1,27 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import ProductCard from '../productCard/productCard';
-import './HomePage.css'; // Optional: Create a CSS file for styling
+import ProductList from '../productList/productList';
+import './HomePage.css';
 
-const HomePage = ({ products }) => {
+const HomePage = () => {
+  const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc');
-  const productsPerPage = 5; // Number of products to display per page
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Define sortAndFilterProducts outside of useEffect, so it can be used elsewhere
-  const sortAndFilterProducts = () => {
-    let sortedProducts = [...products];
+// add products to cart
+const onAddToCart = async (product) => {
+  try {
+      const response = await fetch('http://localhost:5000/api/cart/add', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({ productId: product.id, quantity: 1 }) // Assuming quantity is 1 by default
+      });
 
-    // Sort products based on sortOrder state
-    sortedProducts.sort((a, b) => {
-      if (sortOrder === 'asc') {
-        return a.price - b.price;
-      } else {
-        return b.price - a.price;
+      const data = await response.json();
+
+      if (!response.ok) {
+          throw new Error(data.message || 'Failed to add product to cart.');
       }
-    });
 
-    setFilteredProducts(sortedProducts);
+      console.log('Product added to cart:', data);
+      alert('Product added to cart!');
+  } catch (error) {
+      console.error('Error adding product to cart:', error);
+      alert(error.message);
+  }
+};
+
+
+
+  // Fetch products from the backend
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/products'); // Update URL if necessary
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const data = await response.json();
+        setProducts(data);
+        setFilteredProducts(data); // Initialize filteredProducts
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Sort products based on sortOrder
+  const sortAndFilterProducts = () => {
+    const sorted = [...products].sort((a, b) => 
+      sortOrder === 'asc' ? a.price - b.price : b.price - a.price
+    );
+    setFilteredProducts(sorted);
   };
 
   // Handle sort order change
@@ -29,10 +71,20 @@ const HomePage = ({ products }) => {
     setSortOrder(event.target.value);
   };
 
-  // useEffect to sort products whenever the products or sortOrder changes
+  // Sort products whenever the sort order changes
   useEffect(() => {
     sortAndFilterProducts();
-  }, [products, sortOrder]); // Add products and sortOrder to the dependency array
+  }, [products, sortOrder]);
+
+
+  // Handle loading and error states
+  if (loading) {
+    return <p>Loading products...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <div className="homepage">
@@ -48,27 +100,9 @@ const HomePage = ({ products }) => {
       </div>
 
       {/* Product List */}
-      <div className="product-list">
-        {filteredProducts.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-
-      {/* Pagination or other logic can go here */}
+      <ProductList products={filteredProducts} onAddToCart={onAddToCart} />
     </div>
   );
-};
-
-HomePage.propTypes = {
-  products: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-  })).isRequired,
-};
-
-HomePage.defaultProps = {
-  products: [],
 };
 
 export default HomePage;

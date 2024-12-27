@@ -11,7 +11,7 @@ function ProfileForm() {
         // Fetch user details from backend
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/user', {
+                const response = await fetch('http://localhost:5000/api/auth/profile', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
@@ -35,7 +35,7 @@ function ProfileForm() {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/api/user', {
+            const response = await fetch('http://localhost:5000/api/auth/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,5 +1,5 @@
 import React from 'react';
-import ProductCard from '../productCard/productCard';
+import './OrderSummary.css';
 
 const OrderSummary = ({
   cartItems,
@@ -9,16 +9,24 @@ const OrderSummary = ({
   onConfirm,
   onBack,
 }) => {
+  console.log('OrderSummary Props:', { cartItems, totalPrice, shippingData, paymentData });
+
+  if (!cartItems || !shippingData || !paymentData) {
+    console.log('Missing Data:', { cartItems, shippingData, paymentData });
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <h2>Order Summary</h2>
 
       {/* Shipping Information */}
       <div>
-        <h3>Shipping Information:</h3>
+        <h3>Shipping Information</h3>
         <p>{shippingData.fullName}</p>
         <p>{shippingData.address}</p>
         <p>{shippingData.city}, {shippingData.postalCode}</p>
+        <p>{shippingData.country}</p>
       </div>
 
       {/* Payment Information */}
@@ -31,9 +39,11 @@ const OrderSummary = ({
       {/* Cart Items */}
       <div>
         <h3>Items in Cart:</h3>
-        {cartItems.map(item => (
-          <ProductCard key={item.id} product={item} />
-        ))}
+        <ul>
+          {cartItems.map(item => (
+            <li key={item.product._id}>{item.product.name}</li>
+          ))}
+        </ul>
       </div>
 
       {/* Total Price */}

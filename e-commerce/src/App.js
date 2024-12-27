@@ -14,11 +14,6 @@ import OrderDetails from './components/orderDetails/OrderDetails';
 import AdminDashboard from './components/adminDashbord/AdminDashbord';
 import ProtectedRoute from './components/protectedRoute/ProtectedRoute';
 
-const products = [
-  { id: 1, name: 'Product 1', price: 100 },
-  { id: 2, name: 'Product 2', price: 200 },
-  // Add more products as needed
-];
 
 function App() {
   return (
@@ -26,8 +21,7 @@ function App() {
       <NavBar />
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<HomePage products={products} />} />
-        <Route path="/products" element={<ProductList />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/products/:productId" element={<ProductDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

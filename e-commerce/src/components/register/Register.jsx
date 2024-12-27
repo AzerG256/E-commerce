@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import API from '../../utils/api.js'; // Assuming you have an axios instance configured
+import API from '../../utils/api.js';
 import './Register.css';
 
 function Register() {
@@ -43,8 +43,9 @@ function Register() {
         try {
             const response = await API.post('/auth/register', { name, email, password });
 
-            // Save the JWT token to localStorage
+            // Save the JWT token and userId to localStorage
             localStorage.setItem('token', response.data.token);
+            localStorage.setItem('userId', response.data.id); // Store userId in localStorage
 
             // Display success message
             setSuccessMessage('Registration successful!');

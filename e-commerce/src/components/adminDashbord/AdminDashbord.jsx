@@ -3,6 +3,7 @@ import ProductManagement from '../productManagement/ProductMangement'; // Import
 import OrderManagement from '../orderManagement/OrderManagement'; // Import OrderManagement component
 import UserManagement from '../userManagement/UserManagement'; // Import UserManagement component
 import './AdminDashbord.css'; // Import CSS
+
 const AdminDashboard = () => {
     return (
         <div className="admin-dashboard">

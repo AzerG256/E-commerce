@@ -20,8 +20,9 @@ function Login() {
         try {
             const response = await API.post('/auth/login', { email, password });
 
-            // Save the JWT token to localStorage
+            // Save the JWT token and userId to localStorage
             localStorage.setItem('token', response.data.token);
+            localStorage.setItem('userId', response.data.id); // Store userId in localStorage
 
             // Redirect to a protected route
             navigate('/');

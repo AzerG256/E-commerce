@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import './PaymentForm.css'; // Import CSS
 
-const PaymentForm = ({ onSubmit, onBack }) => {
-  const [paymentData, setPaymentData] = useState({
+const PaymentForm = ({ onSubmit, errors }) => {
+  const [formData, setFormData] = useState({
     cardNumber: '',
     expirationDate: '',
     cvv: '',
@@ -9,53 +10,49 @@ const PaymentForm = ({ onSubmit, onBack }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setPaymentData({ ...paymentData, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add form validation if necessary
-    onSubmit(paymentData);
+    setFormData({ ...formData, [name]: value });
+    onSubmit({ ...formData, [name]: value }); // Pass data to parent in real-time
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div className="payment-form">
       <h2>Payment Information</h2>
       <div>
         <label>Card Number:</label>
         <input
           type="text"
           name="cardNumber"
-          value={paymentData.cardNumber}
+          value={formData.cardNumber}
           onChange={handleChange}
           required
         />
+        {errors?.cardNumber && <span className="error-message">{errors.cardNumber}</span>}
       </div>
       <div>
         <label>Expiration Date:</label>
         <input
           type="text"
           name="expirationDate"
-          value={paymentData.expirationDate}
+          value={formData.expirationDate}
           onChange={handleChange}
           required
         />
+        {errors?.expirationDate && (
+          <span className="error-message">{errors.expirationDate}</span>
+        )}
       </div>
       <div>
         <label>CVV:</label>
         <input
           type="text"
           name="cvv"
-          value={paymentData.cvv}
+          value={formData.cvv}
           onChange={handleChange}
           required
         />
+        {errors?.cvv && <span className="error-message">{errors.cvv}</span>}
       </div>
-      <button type="button" onClick={onBack}>
-        Back
-      </button>
-      <button type="submit">Next</button>
-    </form>
+    </div>
   );
 };
 

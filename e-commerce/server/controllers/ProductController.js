@@ -1,12 +1,22 @@
 const Product = require('../models/Product');
 
 // Get all products
-exports.getAllProducts = async (req, res) => {
+exports.getProducts = async (req, res) => {
     try {
         const products = await Product.find();
-        res.json(products);
+        const formattedProducts = products.map(product => ({
+            id: product._id, // Map _id to id
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            image: product.image,
+            stock: product.stock,
+            createdAt: product.createdAt
+        }));
+        res.status(200).json(formattedProducts);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error fetching products:', error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 };
 
