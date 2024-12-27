@@ -88,7 +88,7 @@ E-commerce/
 Screenshots
 
     Registration Page:
-    ![Regitration](e-commerce/screenshots/Register.png)
+    ![Regitration](screenshots/Register.png)
     Login Page:
     ![Login](e-commerce/screenshots/Login.png)
     Homepage:
