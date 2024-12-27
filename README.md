@@ -5,7 +5,7 @@ An advanced MERN stack e-commerce platform designed for seamless online shopping
 Features
 
     User Authentication: Register, and login functionality.
-    Product Browsing: Dynamic product catalog with search and filter capabilities.
+    Product Browsing: Dynamic product catalog .
     Shopping Cart: Add, remove, and update items in the cart.
     Order Management: Checkout and order tracking.
     Admin Dashboard: Manage products, users, and orders.
