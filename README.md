@@ -86,25 +86,28 @@ E-commerce/
 ├── server/server.js        # Backend entry point
 
 Screenshots
+Registration Page:  
+![Registration](e-commerce/screenshots/Register.png)
 
-    Registration Page:
-    ![Regitration](screenshots/Register.png)
-    Login Page:
-    ![Login](e-commerce/screenshots/Login.png)
-    Homepage:
-    ![homepage](e-commerce/screenshots/HomePage.png)
-    Cart Page:
-    ![Cart](e-commerce/screenshots/Cart.png)
+Login Page:  
+![Login](e-commerce/screenshots/Login.png)
 
-    order payment and validation:
-    ![shippmentInfo](e-commerce/screenshots/shippmentInfo.png)
-    ![paymentInfo](e-commerce/screenshots/PaymentInfo.png)
-    ![orderSummury](e-commerce/screenshots/orderSummary.png)
-    
-    UserProfile Page:
-    ![userProfile](e-commerce/screenshots/UserProfile.png)
-    OrderHistory Page:
-    ![orderHistory](e-commerce/screenshots/Orderhistory.png)
+Homepage:  
+![Homepage](e-commerce/screenshots/HomePage.png)
+
+Cart Page:  
+![Cart](e-commerce/screenshots/Cart.png)
+
+Order Payment and Validation:  
+![Shippment Info](e-commerce/screenshots/shippmentInfo.png)  
+![Payment Info](e-commerce/screenshots/PaymentInfo.png)  
+![Order Summary](e-commerce/screenshots/orderSummary.png)
+
+User Profile Page:  
+![User Profile](e-commerce/screenshots/UserProfile.png)
+
+Order History Page:  
+![Order History](e-commerce/screenshots/Orderhistory.png)
 
 Contributing
 
